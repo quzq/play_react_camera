@@ -228,22 +228,21 @@ class CameraContainer extends Component {
 
     const windowSize = this.getWindowSize()
     const videoDisplaySize = helper.stretchSize(windowSize.width, windowSize.height, this.state.cameraResolution.width, this.state.cameraResolution.height)
-    const frameWidth = parseInt(videoDisplaySize.width * CAMERA_FRAME_WIDTH_RATIO)
-    const frameHeight = parseInt(videoDisplaySize.height * CAMERA_FRAME_HEIGHT_RATIO)
-    const videoRect = { x1: parseInt((windowSize.width - frameWidth) / 2), y1: parseInt((windowSize.height - frameHeight) / 2) }
-    videoRect.x2 = videoRect.x1 + frameWidth
-    videoRect.y2 = videoRect.y1 + frameHeight
-    const frameStyle = { stroke: 'red', strokeWidth: 3 }
+    const guideWidth = parseInt(videoDisplaySize.width * CAMERA_FRAME_WIDTH_RATIO)
+    const guideHeight = parseInt(videoDisplaySize.height * CAMERA_FRAME_HEIGHT_RATIO)
+    const guideRect = { 
+      x: parseInt((windowSize.width - guideWidth) / 2),
+      y: parseInt((windowSize.height - guideHeight) / 2),
+      width: guideWidth,
+      height: guideHeight,
+    }
 
     return (
       <div>
         <div style={{ width: windowSize.width, height: windowSize.height, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'black' }}>
           <video ref={this.refCameraPreview} style={{ ...(videoDisplaySize.base === 'width' ? { width: '100%' } : { height: '100%' }) }} muted autoPlay playsInline></video>
           <svg xmlns="http://www.w3.org/2000/svg" style={{ position: 'absolute', top: 0, left: 0, width: windowSize.width, height: windowSize.height }}>
-            <line x1={videoRect.x1} y1={videoRect.y1} x2={videoRect.x2} y2={videoRect.y1} style={frameStyle} />
-            <line x1={videoRect.x2} y1={videoRect.y1} x2={videoRect.x2} y2={videoRect.y2} style={frameStyle} />
-            <line x1={videoRect.x2} y1={videoRect.y2} x2={videoRect.x1} y2={videoRect.y2} style={frameStyle} />
-            <line x1={videoRect.x1} y1={videoRect.y2} x2={videoRect.x1} y2={videoRect.y1} style={frameStyle} />
+            <rect x={guideRect.x} y={guideRect.y} width={guideRect.width} height={guideRect.height} style={{ fill: 'none', stroke: 'red', strokeWidth: 3 }} />
           </svg>
           <p style={{ color: 'red', fontWeight: 'bold', position: 'absolute', top: 0 }}>
             {this.state.cameraStreaming ? '枠内に収まるように調整してください。' : (this.state.isCameraView ? 'カメラを探しています...' : '(closed)')}
